@@ -77,10 +77,43 @@ async function decodeReportReference(src, type) {
   return image;
 }
 
+function referenceStorage(mode, operation) {
+  return new Promise((resolve,reject) => {
+    const request = indexedDB.open('getir-rapor-sablonlari',1);
+    request.onupgradeneeded = () => request.result.createObjectStore('templates');
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      const tx = db.transaction('templates',mode);
+      const action = operation(tx.objectStore('templates'));
+      tx.oncomplete = () => { db.close(); resolve(action.result); };
+      tx.onabort = () => { db.close(); reject(tx.error || action.error); };
+    };
+  });
+}
+
+async function storedReference(type) {
+  const key = reportReferences[type].key;
+  const saved = await referenceStorage('readonly',store=>store.get(key));
+  if (saved) return saved;
+  const legacy = localStorage.getItem(key);
+  if (!legacy) return null;
+  const blob = await (await fetch(legacy)).blob();
+  await referenceStorage('readwrite',store=>store.put(blob,key));
+  if (localStorage.getItem(key) === legacy) localStorage.removeItem(key);
+  return blob;
+}
+
+async function decodeReferenceBlob(blob,type) {
+  const url = URL.createObjectURL(blob);
+  try { return await decodeReportReference(url,type); }
+  finally { URL.revokeObjectURL(url); }
+}
+
 async function reportReference(type) {
-  const src = localStorage.getItem(reportReferences[type].key);
-  if (!src) throw Error('Önce bu raporun onaylı referans görselini seçin.');
-  return decodeReportReference(src, type);
+  const blob = await storedReference(type);
+  if (!blob) throw Error('Önce bu raporun onaylı referans görselini seçin.');
+  return decodeReferenceBlob(blob,type);
 }
 
 function setupReportReference(type) {
@@ -97,23 +130,28 @@ function setupReportReference(type) {
     picker.hidden = false;
     change.hidden = true;
   };
-  if (localStorage.getItem(reportReferences[type].key)) showSavedReference();
+  input.disabled = true;
+  storedReference(type).then(blob => {
+    if (blob) showSavedReference();
+  }).catch(() => {
+    status.textContent = 'Kayıtlı şablon okunamadı. Şablonu yeniden seçebilirsiniz.';
+  }).finally(() => { input.disabled = false; });
   input.onchange = async () => {
-    if (!input.files[0]) return;
+    const file = input.files[0];
+    if (!file) return;
+    input.disabled = true;
     try {
-      const src = await new Promise((resolve,reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsDataURL(input.files[0]);
-      });
-      await decodeReportReference(src, type);
-      localStorage.setItem(reportReferences[type].key,src);
+      await decodeReferenceBlob(file,type);
+      await referenceStorage('readwrite',store=>store.put(file,reportReferences[type].key));
       clearPreview();
       input.value = '';
       showSavedReference();
     } catch (error) {
-      status.textContent = error.message;
+      status.textContent = error?.name === 'QuotaExceededError'
+        ? 'Cihazda şablon için yeterli depolama alanı yok.'
+        : error?.message || 'Şablon kaydedilemedi.';
+    } finally {
+      input.disabled = false;
     }
   };
 }

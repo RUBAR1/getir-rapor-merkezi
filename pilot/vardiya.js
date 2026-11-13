@@ -98,8 +98,11 @@ async function shiftCanvas(report) {
       ctx.font = 'bold 14px Rapor';
       const padding = column === 0 ? 3 : 6;
       const available = edges[column+1] - edges[column] - 2 * padding;
-      if (ctx.measureText(value).width > available) throw Error('Vardiya satır ' + (index+1) + ': hücre metni sığmıyor.');
-      ctx.fillText(value,edges[column]+padding,y+rowHeight/2);
+      const width = ctx.measureText(value).width;
+      if (width > available) {
+        ctx.font = 'bold ' + Math.max(10, Math.floor(14 * available / width)) + 'px Rapor';
+      }
+      ctx.fillText(value,edges[column]+padding,y+rowHeight/2,available);
     });
     ctx.fillStyle = '#39234d33';
     ctx.fillRect(left,y+rowHeight-1,right-left,1);

@@ -64,6 +64,7 @@ async function problemCanvas(report) {
 const reportReferences = {
   problem:{key:'getir-problem-reference-v1',width:1536,height:1122},
   star:{key:'getir-star-reference-v2',width:997,height:1578},
+  ortak:{key:'getir-ortak-reference-v51',width:4200,height:4409},
   picker:{key:'getir-picker-reference-v7',width:1606,height:979}
 };
 

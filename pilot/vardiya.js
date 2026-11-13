@@ -96,9 +96,10 @@ async function shiftCanvas(report) {
     ctx.fillStyle = '#21122b';
     [String(index+1),...row].forEach((value,column) => {
       ctx.font = 'bold 14px Rapor';
-      const available = edges[column+1]-edges[column]-12;
+      const padding = column === 0 ? 3 : 6;
+      const available = edges[column+1] - edges[column] - 2 * padding;
       if (ctx.measureText(value).width > available) throw Error('Vardiya satır ' + (index+1) + ': hücre metni sığmıyor.');
-      ctx.fillText(value,edges[column]+6,y+rowHeight/2);
+      ctx.fillText(value,edges[column]+padding,y+rowHeight/2);
     });
     ctx.fillStyle = '#39234d33';
     ctx.fillRect(left,y+rowHeight-1,right-left,1);

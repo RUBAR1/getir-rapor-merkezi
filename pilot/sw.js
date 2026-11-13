@@ -1,4 +1,4 @@
-const cacheName = 'davutpasa-rapor-pilot-14';
+const cacheName = 'davutpasa-rapor-merkezi-v1';
 const assets = ['./index.html', './depo.js', './vardiya.js', './problem.js', './star.js', './picker.js', './ortak.js', './vardiya-header.png', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', event => {
@@ -6,7 +6,7 @@ self.addEventListener('install', event => {
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(
-    keys.filter(key => key.startsWith('davutpasa-rapor-pilot-') && key !== cacheName).map(key => caches.delete(key))
+    keys.filter(key => (key.startsWith('davutpasa-rapor-pilot-') || key.startsWith('davutpasa-rapor-merkezi-')) && key !== cacheName).map(key => caches.delete(key))
   )).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', event => {

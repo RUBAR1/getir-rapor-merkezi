@@ -63,7 +63,8 @@ async function problemCanvas(report) {
 
 const reportReferences = {
   problem:{key:'getir-problem-reference-v1',width:1536,height:1122},
-  star:{key:'getir-star-reference-v2',width:997,height:1578}
+  star:{key:'getir-star-reference-v2',width:997,height:1578},
+  picker:{key:'getir-picker-reference-v7',width:1606,height:979}
 };
 
 async function decodeReportReference(src, type) {
@@ -71,14 +72,14 @@ async function decodeReportReference(src, type) {
   image.src = src;
   await image.decode();
   if (image.naturalWidth !== reportReferences[type].width || image.naturalHeight !== reportReferences[type].height) {
-    throw Error('Bu rapor için onaylı referans PNG dosyasını seçin.');
+    throw Error('Bu rapor için onaylı referans görselini seçin.');
   }
   return image;
 }
 
 async function reportReference(type) {
   const src = localStorage.getItem(reportReferences[type].key);
-  if (!src) throw Error('Önce bu raporun onaylı referans PNG dosyasını seçin.');
+  if (!src) throw Error('Önce bu raporun onaylı referans görselini seçin.');
   return decodeReportReference(src, type);
 }
 

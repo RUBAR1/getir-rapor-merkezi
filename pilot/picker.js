@@ -68,20 +68,20 @@ async function pickerCanvas(report) {
   });
   for(const x of edges.slice(1,-1)) ctx.fillRect(x,162,2,530);
   if(report.date!=='02.11.2026') {
-    for(let y=43;y<=85;y++) {
-      const gradient=ctx.createLinearGradient(1146,0,1344,0);
-      for(const [stop,x] of [[0,1141],[1,1349]]) {
+    for(let y=49;y<=80;y++) {
+      const gradient=ctx.createLinearGradient(1176,0,1383,0);
+      for(const [stop,x] of [[0,1174],[1,1384]]) {
         const [r,g,b]=ctx.getImageData(x,y,1,1).data;
         gradient.addColorStop(stop,'rgb('+[r,g,b].join(',')+')');
       }
       ctx.fillStyle=gradient;
-      ctx.fillRect(1146,y,199,1);
+      ctx.fillRect(1176,y,207,1);
     }
     const [day,month,year]=report.date.split('.');
     ctx.textAlign='center';
     ctx.font='bold 27px Rapor';
     ctx.fillStyle='#16051c';
-    ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,1245,64,178);
+    ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,1279,64,198);
   }
   return canvas;
 }

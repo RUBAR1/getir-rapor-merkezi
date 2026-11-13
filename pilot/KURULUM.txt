@@ -1,0 +1,17 @@
+DAVUTPAŞA GB RAPOR MERKEZİ — PİLOT 1
+
+1. ZIP'i açın. Dosyaları bir HTTPS sitesinde ayrı bir pilot klasörüne
+   birlikte yükleyin. Örnek: GitHub Pages deposunda pilot/ klasörü.
+2. Safari'de pilot klasörünün HTTPS adresini açın. Kurulum bölümünde
+   “Çevrimdışı kullanım hazır” yazısını bekleyin.
+3. Safari Paylaş menüsünden “Ana Ekrana Ekle”yi seçin ve uygulamayı açın.
+4. Uçak moduna geçin. CDI veya Depo İçi Süre'yi seçin, iPhone'da
+   kayıtlı bir XLSX açın, raporu oluşturun ve PNG/JPG indirin.
+5. “Arşive kaydet”e dokunun. Uygulamayı kapatıp açın ve arşivden
+   raporu yeniden açın. Önceki kurulum başka bir adresteyse arşiv
+   yedeğini dışarı alıp bu kurulumda geri yükleyebilirsiniz.
+
+CDI, Günlük Kurye Detayı sayfasından tarihi ve harf notlarını okur.
+Depo İçi Süre, tek sayfalı dosya ve en fazla 18 kayıt destekler.
+Depo tarihi Türkiye saatine göre bir önceki gündür.
+Üretim tarayıcıda yapılır. Pakette örnek personel Excel dosyası yoktur.

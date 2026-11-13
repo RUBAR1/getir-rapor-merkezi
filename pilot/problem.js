@@ -31,7 +31,7 @@ async function problemCanvas(report) {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle='#2b006d';
   ctx.fillRect(0,0,canvas.width,canvas.height);
-  const image = await problemReference();
+  const image = await reportReference('problem');
   const edges = [12,408,625,897,1206,1527];
   ctx.drawImage(image,0,0,1536,201,0,0,1536,201);
   ctx.drawImage(image,0,1013,1536,109,0,bottom,1536,109);
@@ -61,29 +61,32 @@ async function problemCanvas(report) {
   return canvas;
 }
 
-const problemReferenceKey = 'getir-problem-reference-v1';
+const reportReferences = {
+  problem:{key:'getir-problem-reference-v1',width:1536,height:1122},
+  star:{key:'getir-star-reference-v2',width:997,height:1578}
+};
 
-async function decodeProblemReference(src) {
+async function decodeReportReference(src, type) {
   const image = new Image();
   image.src = src;
   await image.decode();
-  if (image.naturalWidth !== 1536 || image.naturalHeight !== 1122) {
-    throw Error('12 Kasım 2026 referans PNG dosyasını seçin (1536 × 1122).');
+  if (image.naturalWidth !== reportReferences[type].width || image.naturalHeight !== reportReferences[type].height) {
+    throw Error('Bu rapor için onaylı referans PNG dosyasını seçin.');
   }
   return image;
 }
 
-async function problemReference() {
-  const src = localStorage.getItem(problemReferenceKey);
-  if (!src) throw Error('Önce 12 Kasım 2026 referans PNG dosyasını seçin.');
-  return decodeProblemReference(src);
+async function reportReference(type) {
+  const src = localStorage.getItem(reportReferences[type].key);
+  if (!src) throw Error('Önce bu raporun onaylı referans PNG dosyasını seçin.');
+  return decodeReportReference(src, type);
 }
 
-function setupProblemReference() {
-  const input = document.getElementById('problemReference');
-  const status = document.getElementById('problemReferenceStatus');
-  const picker = document.getElementById('problemReferencePicker');
-  const change = document.getElementById('problemReferenceChange');
+function setupReportReference(type) {
+  const input = document.getElementById(type + 'Reference');
+  const status = document.getElementById(type + 'ReferenceStatus');
+  const picker = document.getElementById(type + 'ReferencePicker');
+  const change = document.getElementById(type + 'ReferenceChange');
   function showSavedReference() {
     picker.hidden = true;
     change.hidden = false;
@@ -93,7 +96,7 @@ function setupProblemReference() {
     picker.hidden = false;
     change.hidden = true;
   };
-  if (localStorage.getItem(problemReferenceKey)) showSavedReference();
+  if (localStorage.getItem(reportReferences[type].key)) showSavedReference();
   input.onchange = async () => {
     if (!input.files[0]) return;
     try {
@@ -103,8 +106,8 @@ function setupProblemReference() {
         reader.onerror = () => reject(reader.error);
         reader.readAsDataURL(input.files[0]);
       });
-      await decodeProblemReference(src);
-      localStorage.setItem(problemReferenceKey,src);
+      await decodeReportReference(src, type);
+      localStorage.setItem(reportReferences[type].key,src);
       clearPreview();
       input.value = '';
       showSavedReference();

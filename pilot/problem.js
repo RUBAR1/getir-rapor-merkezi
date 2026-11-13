@@ -31,46 +31,20 @@ async function problemCanvas(report) {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle='#2b006d';
   ctx.fillRect(0,0,canvas.width,canvas.height);
+  const image = await problemReference();
   const edges = [12,408,625,897,1206,1527];
+  ctx.drawImage(image,0,0,1536,201,0,0,1536,201);
+  ctx.drawImage(image,0,1013,1536,109,0,bottom,1536,109);
   const [day,month,year] = report.date.split('.');
-  const banner = ctx.createLinearGradient(0,0,1536,0);
-  banner.addColorStop(0,'#501099');
-  banner.addColorStop(.5,'#2b006d');
-  banner.addColorStop(1,'#6609a7');
-  ctx.fillStyle=banner;
-  ctx.fillRect(0,0,1536,144);
-  ctx.fillStyle='#ffdc00';
-  ctx.fillRect(12,137,1515,5);
+  if (report.date !== '12.11.2026') {
+    for (let y=43;y<70;y++) ctx.drawImage(image,1138,y,1,1,1140,y,202,1);
+    ctx.textBaseline='middle';
+    ctx.textAlign='center';
+    ctx.font='bold 24px Rapor';
+    ctx.fillStyle='#210d2d';
+    ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,1242,56,198);
+  }
   ctx.textBaseline='middle';
-  ctx.font='bold 34px Rapor';
-  ctx.fillText('getir',32,59);
-  ctx.font='bold 20px Rapor';
-  ctx.fillText('DAVUTPAŞA GB',34,99);
-  ctx.textAlign='center';
-  ctx.font='bold 36px Rapor';
-  ctx.fillText('KURYE PROBLEMLİ SİPARİŞ',768,73,790);
-  ctx.fillStyle='#ffdc00';
-  ctx.beginPath();
-  ctx.roundRect(1252,43,253,56,15);
-  ctx.fill();
-  ctx.font='bold 23px Rapor';
-  ctx.fillStyle='#210d2d';
-  ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,1378,72,225);
-  ctx.fillStyle='#fff';
-  ctx.font='bold 21px Rapor';
-  problemHeaders.forEach((label,i)=>ctx.fillText(label.toLocaleUpperCase('tr'),
-    (edges[i]+edges[i+1])/2,172,edges[i+1]-edges[i]-16));
-  [['#baf2c2','0 = Problemli Sipariş Yok'],['#f4b6c6','1 ve Üzeri = Problemli Sipariş Var']]
-    .forEach(([color,label],i)=>{
-      const x=32+i*755;
-      ctx.fillStyle=color;
-      ctx.beginPath();
-      ctx.roundRect(x,bottom+24,718,59,18);
-      ctx.fill();
-      ctx.fillStyle='#210d2d';
-      ctx.font='bold 23px Rapor';
-      ctx.fillText(label,x+359,bottom+54);
-    });
   ctx.textAlign='left';
   report.data.forEach((row,index) => {
     const y=top+index*rowHeight;
@@ -85,4 +59,45 @@ async function problemCanvas(report) {
   ctx.fillStyle='#fff';
   for(const edge of edges) ctx.fillRect(edge,top,2,bottom-top);
   return canvas;
+}
+
+const problemReferenceKey = 'getir-problem-reference-v1';
+
+async function decodeProblemReference(src) {
+  const image = new Image();
+  image.src = src;
+  await image.decode();
+  if (image.naturalWidth !== 1536 || image.naturalHeight !== 1122) {
+    throw Error('12 Kasım 2026 referans PNG dosyasını seçin (1536 × 1122).');
+  }
+  return image;
+}
+
+async function problemReference() {
+  const src = localStorage.getItem(problemReferenceKey);
+  if (!src) throw Error('Önce 12 Kasım 2026 referans PNG dosyasını seçin.');
+  return decodeProblemReference(src);
+}
+
+function setupProblemReference() {
+  const input = document.getElementById('problemReference');
+  const status = document.getElementById('problemReferenceStatus');
+  if (localStorage.getItem(problemReferenceKey)) status.textContent = 'Referans bu cihazda kayıtlı.';
+  input.onchange = async () => {
+    if (!input.files[0]) return;
+    try {
+      const src = await new Promise((resolve,reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(input.files[0]);
+      });
+      await decodeProblemReference(src);
+      localStorage.setItem(problemReferenceKey,src);
+      clearPreview();
+      status.textContent = 'Referans bu cihazda kayıtlı.';
+    } catch (error) {
+      status.textContent = error.message;
+    }
+  };
 }

@@ -1,5 +1,5 @@
-const cacheName = 'davutpasa-rapor-pilot-1';
-const assets = ['./index.html', './depo.js', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const cacheName = 'davutpasa-rapor-pilot-2';
+const assets = ['./index.html', './depo.js', './vardiya.js', './vardiya-header.png', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(cacheName).then(cache => cache.addAll(assets)).then(() => self.skipWaiting()));

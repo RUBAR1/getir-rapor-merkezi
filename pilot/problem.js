@@ -82,7 +82,18 @@ async function problemReference() {
 function setupProblemReference() {
   const input = document.getElementById('problemReference');
   const status = document.getElementById('problemReferenceStatus');
-  if (localStorage.getItem(problemReferenceKey)) status.textContent = 'Referans bu cihazda kayıtlı.';
+  const picker = document.getElementById('problemReferencePicker');
+  const change = document.getElementById('problemReferenceChange');
+  function showSavedReference() {
+    picker.hidden = true;
+    change.hidden = false;
+    status.textContent = 'Kayıtlı şablon otomatik kullanılıyor. Yalnızca Excel dosyasını seçin.';
+  }
+  change.onclick = () => {
+    picker.hidden = false;
+    change.hidden = true;
+  };
+  if (localStorage.getItem(problemReferenceKey)) showSavedReference();
   input.onchange = async () => {
     if (!input.files[0]) return;
     try {
@@ -95,7 +106,8 @@ function setupProblemReference() {
       await decodeProblemReference(src);
       localStorage.setItem(problemReferenceKey,src);
       clearPreview();
-      status.textContent = 'Referans bu cihazda kayıtlı.';
+      input.value = '';
+      showSavedReference();
     } catch (error) {
       status.textContent = error.message;
     }

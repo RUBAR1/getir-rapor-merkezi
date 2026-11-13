@@ -48,18 +48,19 @@ function prepareShift(rows, now = new Date()) {
     if (!data[2]) throw Error('Kurye adı boş.');
     data[0] = shiftDate(data[0]);
     data[1] = shiftTime(data[1]);
-    const record = {data,status};
+    const stamp = data[0].split('.').reverse().join('-') + 'T' + data[1];
+    const record = {data,status,stamp};
     records.push(record);
     if (status !== 'musait') continue;
     const key = data[2].toLocaleLowerCase('tr');
-    const stamp = data[0].split('.').reverse().join('-') + 'T' + data[1];
     if (!earliest.has(key) || stamp < earliest.get(key).stamp) earliest.set(key,{record,stamp});
   }
   const kept = records.filter(record => record.status !== 'musait' ||
     earliest.get(record.data[2].toLocaleLowerCase('tr')).record === record);
   excluded.repeated = records.length - kept.length;
   if (!kept.length) throw Error('Rapora alınacak vardiya kaydı yok.');
-  kept.sort((a,b) => a.data[2].localeCompare(b.data[2],'tr',{sensitivity:'base'}));
+  kept.sort((a,b) => a.data[2].localeCompare(b.data[2],'tr',{sensitivity:'base'}) ||
+    a.stamp.localeCompare(b.stamp));
   return {type:'shift',headers:shiftHeaders,data:kept.map(record => record.data),
     date:previousIstanbulDay(now),source:sourceRows.length,excluded};
 }

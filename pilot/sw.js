@@ -1,4 +1,4 @@
-const cacheName = 'davutpasa-rapor-pilot-8';
+const cacheName = 'davutpasa-rapor-pilot-9';
 const assets = ['./index.html', './depo.js', './vardiya.js', './problem.js', './vardiya-header.png', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', event => {

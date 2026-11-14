@@ -23,8 +23,17 @@ function prepareStar(rows, now = new Date()) {
     green:entries.filter(row=>row.score===5).length,date:previousIstanbulDay(now)};
 }
 
+function loadStarTemplate() {
+  const image = new Image();
+  return new Promise((resolve,reject) => {
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(Error('Yıldız Puanı şablonu yüklenemedi. Uygulamayı internet bağlantısıyla yeniden açın.'));
+    image.src = './star-template.png';
+  });
+}
+
 async function starCanvas(report) {
-  const image = await reportReference('star');
+  const image = await loadStarTemplate();
   await document.fonts.load('bold 29px Rapor');
   const canvas = document.createElement('canvas');
   const count = report.data.length;
@@ -38,30 +47,11 @@ async function starCanvas(report) {
   if (extra) ctx.drawImage(image,0,1200,997,1,0,1233,997,extra);
   ctx.drawImage(image,0,1233,997,345,0,bottom,997,345);
   ctx.textBaseline='middle';
-  if (report.date !== '06.11.2026') {
-    const [day,month,year]=report.date.split('.');
-    const patch=ctx.getImageData(565,30,200,34);
-    const {data}=patch;
-    for(let y=0;y<34;y++) {
-      const dark=x=>data[(y*200+x)*4]<180 && data[(y*200+x)*4+1]<160;
-      const mask=Array.from({length:200},(_,x)=>[x-1,x,x+1].some(j=>j>=0&&j<200&&dark(j)));
-      for(let x=1;x<199;x++) {
-        if (!mask[x]) continue;
-        let left=x-1,right=x+1;
-        while(left>0&&mask[left]) left--;
-        while(right<199&&mask[right]) right++;
-        for(let channel=0;channel<3;channel++) {
-          data[(y*200+x)*4+channel]=Math.round(
-            (data[(y*200+left)*4+channel]*(right-x)+data[(y*200+right)*4+channel]*(x-left))/(right-left));
-        }
-      }
-    }
-    ctx.putImageData(patch,565,30);
-    ctx.font='bold 24px Rapor';
-    ctx.fillStyle='#2d075b';
-    ctx.textAlign='center';
-    ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1].toLocaleUpperCase('tr')+' '+year,665,47,180);
-  }
+  const [day,month,year]=report.date.split('.');
+  ctx.font='bold 24px Rapor';
+  ctx.fillStyle='#2d075b';
+  ctx.textAlign='center';
+  ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1].toLocaleUpperCase('tr')+' '+year,665,47,180);
   const rowGradients = [260,940].map(y=>{
     const gradient=ctx.createLinearGradient(25,0,971,0);
     for(const [stop,x] of [[0,35],[1,960]]) {
@@ -87,15 +77,6 @@ async function starCanvas(report) {
     ctx.fillRect(25,y,946,2);
   });
   for(const x of cols.slice(1,-1)) ctx.fillRect(x,242,2,bottom-242);
-  for(let y=1425+extra;y<1488+extra;y++) {
-    const gradient=ctx.createLinearGradient(35,0,965,0);
-    for(const [stop,x] of [[0,20],[1,976]]) {
-      const [r,g,b]=ctx.getImageData(x,y,1,1).data;
-      gradient.addColorStop(stop,'rgb('+[r,g,b].join(',')+')');
-    }
-    ctx.fillStyle=gradient;
-    ctx.fillRect(35,y,930,1);
-  }
   const parts=['TOPLAM KURYE: ',String(count),'  |  ÇOK İYİ: ',String(report.green),'  |  KÖTÜ: ',String(count-report.green)];
   let size=35;
   const measure=()=>parts.reduce((sum,part)=>sum+ctx.measureText(part).width,0);

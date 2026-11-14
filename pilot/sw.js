@@ -1,5 +1,5 @@
-const cacheName = 'davutpasa-rapor-merkezi-v4';
-const assets = ['./index.html', './depo.js', './vardiya.js', './problem.js', './star.js', './picker.js', './ortak.js', './vardiya-header.png', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './getir-192.png', './getir-512.png'];
+const cacheName = 'davutpasa-rapor-merkezi-v5';
+const assets = ['./index.html', './depo.js', './vardiya.js', './problem.js', './star.js', './star-template.png', './picker.js', './ortak.js', './vardiya-header.png', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './getir-192.png', './getir-512.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(cacheName).then(cache => cache.addAll(assets.map(asset => new Request(asset, {cache:'reload'})))).then(() => self.skipWaiting()));

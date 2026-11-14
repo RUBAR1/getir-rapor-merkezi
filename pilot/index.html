@@ -49,6 +49,13 @@ main>.panel,.screen-nav{background:#fff}
 #create #save{grid-area:save}
 #status{min-height:2.25em}
 #create input[type=file]{height:46px}
+header .brand{transform:translateY(clamp(8px,2.5vw,18px))}
+header .logo{border:2.5px solid #ffdc18;background:#210b40;padding:3px;box-shadow:0 0 9px #ffbf18b3}
+.screen-rider img{
+  mask-image:linear-gradient(to right,transparent,#000 18%,#000 82%,transparent),linear-gradient(to bottom,transparent,#000 15%,#000 83%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-composite:intersect;
+}
 </style></head><body><header><div class="wrap"><div class="brand"><img class="logo" src="./logo.webp" alt="" width="52" height="52"><div><h1>GETİR RAPOR MERKEZİ</h1><p>DAVUTPAŞA GB</p></div></div></div></header><main data-screen="create"><nav class="screen-nav" aria-label="Uygulama bölümleri">
 <button type="button" data-screen="create" aria-pressed="true">Rapor oluştur</button>
 <button type="button" data-screen="preview" aria-pressed="false" disabled>Önizleme</button>

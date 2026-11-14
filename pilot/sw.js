@@ -1,4 +1,4 @@
-const cacheName = 'davutpasa-rapor-merkezi-v6';
+const cacheName = 'davutpasa-rapor-merkezi-v7';
 const assets = ['./index.html', './depo.js', './vardiya.js', './problem.js', './star.js', './star-template.png', './problem-template.png', './picker-template.png', './ortak-template.png', './picker.js', './ortak.js', './vardiya-header.png', './depo-template.png', './rapor-bold.ttf', './manifest.webmanifest', './getir-192.png', './getir-512.png'];
 
 self.addEventListener('install', event => {

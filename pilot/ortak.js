@@ -78,15 +78,12 @@ async function ortakCanvas(report) {
   ctx.scale(canvas.width/W,canvas.height/height);
   ctx.textBaseline='top';
   ctx.drawImage(ref,0,0,W,315,0,0,W,315);
-  if(report.date!=='31.10.2026') {
-    for(let y=83;y<178;y++) ctx.drawImage(ref,3020,y,1,1,3025,y,536,1);
-    const [day,month,year]=report.date.split('.');
-    ctx.fillStyle='#23005b';
-    ctx.font='bold 58px Rapor';
-    ctx.textAlign='center';
-    ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,3292,102,519);
-    ctx.textAlign='left';
-  }
+  const [day,month,year]=report.date.split('.');
+  ctx.fillStyle='#23005b';
+  ctx.font='bold 58px Rapor';
+  ctx.textAlign='center';
+  ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,3292,102,519);
+  ctx.textAlign='left';
   function drawRow(lines,y,h,index) {
     lines.forEach((parts,j)=>{
       ctx.fillStyle=index<0?'#310079':j===2?(index%2?'#ffef9c':'#ffe77a'):

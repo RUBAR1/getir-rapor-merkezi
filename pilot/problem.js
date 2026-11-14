@@ -34,16 +34,13 @@ async function problemCanvas(report) {
   const image = await reportReference('problem');
   const edges = [12,408,625,897,1206,1527];
   ctx.drawImage(image,0,0,1536,201,0,0,1536,201);
-  ctx.drawImage(image,0,1013,1536,109,0,bottom,1536,109);
+  ctx.drawImage(image,0,201,1536,109,0,bottom,1536,109);
   const [day,month,year] = report.date.split('.');
-  if (report.date !== '12.11.2026') {
-    for (let y=43;y<70;y++) ctx.drawImage(image,1138,y,1,1,1140,y,202,1);
-    ctx.textBaseline='middle';
-    ctx.textAlign='center';
-    ctx.font='bold 24px Rapor';
-    ctx.fillStyle='#210d2d';
-    ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,1242,56,198);
-  }
+  ctx.textBaseline='middle';
+  ctx.textAlign='center';
+  ctx.font='bold 24px Rapor';
+  ctx.fillStyle='#210d2d';
+  ctx.fillText(Number(day)+' '+monthsTR[Number(month)-1]+' '+year,1242,56,198);
   ctx.textBaseline='middle';
   ctx.textAlign='left';
   report.data.forEach((row,index) => {
@@ -62,97 +59,18 @@ async function problemCanvas(report) {
 }
 
 const reportReferences = {
-  problem:{key:'getir-problem-reference-v1',width:1536,height:1122},
-  star:{key:'getir-star-reference-v2',width:997,height:1578},
-  ortak:{key:'getir-ortak-reference-v51',width:4200,height:4409},
-  picker:{key:'getir-picker-reference-v7',width:1606,height:979}
+  problem: [1536,310],
+  picker: [1606,979],
+  ortak: [4200,315]
 };
 
-async function decodeReportReference(src, type) {
-  const image = new Image();
-  image.src = src;
-  await image.decode();
-  if (image.naturalWidth !== reportReferences[type].width || image.naturalHeight !== reportReferences[type].height) {
-    throw Error('Bu rapor için onaylı referans görselini seçin.');
-  }
-  return image;
-}
-
-function referenceStorage(mode, operation) {
+function reportReference(type) {
+  const [width,height] = reportReferences[type];
   return new Promise((resolve,reject) => {
-    const request = indexedDB.open('getir-rapor-sablonlari',1);
-    request.onupgradeneeded = () => request.result.createObjectStore('templates');
-    request.onerror = () => reject(request.error);
-    request.onsuccess = () => {
-      const db = request.result;
-      const tx = db.transaction('templates',mode);
-      const action = operation(tx.objectStore('templates'));
-      tx.oncomplete = () => { db.close(); resolve(action.result); };
-      tx.onabort = () => { db.close(); reject(tx.error || action.error); };
-    };
+    const image = new Image();
+    const fail = () => reject(Error('Rapor şablonu yüklenemedi. Uygulamayı internet bağlantısıyla yeniden açın.'));
+    image.onload = () => image.naturalWidth === width && image.naturalHeight === height ? resolve(image) : fail();
+    image.onerror = fail;
+    image.src = './'+type+'-template.png';
   });
-}
-
-async function storedReference(type) {
-  const key = reportReferences[type].key;
-  const saved = await referenceStorage('readonly',store=>store.get(key));
-  if (saved) return saved;
-  const legacy = localStorage.getItem(key);
-  if (!legacy) return null;
-  const blob = await (await fetch(legacy)).blob();
-  await referenceStorage('readwrite',store=>store.put(blob,key));
-  if (localStorage.getItem(key) === legacy) localStorage.removeItem(key);
-  return blob;
-}
-
-async function decodeReferenceBlob(blob,type) {
-  const url = URL.createObjectURL(blob);
-  try { return await decodeReportReference(url,type); }
-  finally { URL.revokeObjectURL(url); }
-}
-
-async function reportReference(type) {
-  const blob = await storedReference(type);
-  if (!blob) throw Error('Önce bu raporun onaylı referans görselini seçin.');
-  return decodeReferenceBlob(blob,type);
-}
-
-function setupReportReference(type) {
-  const input = document.getElementById(type + 'Reference');
-  const status = document.getElementById(type + 'ReferenceStatus');
-  const picker = document.getElementById(type + 'ReferencePicker');
-  const change = document.getElementById(type + 'ReferenceChange');
-  function showSavedReference() {
-    picker.hidden = true;
-    change.hidden = false;
-    status.textContent = 'Kayıtlı şablon otomatik kullanılıyor. Yalnızca Excel dosyasını seçin.';
-  }
-  change.onclick = () => {
-    picker.hidden = false;
-    change.hidden = true;
-  };
-  input.disabled = true;
-  storedReference(type).then(blob => {
-    if (blob) showSavedReference();
-  }).catch(() => {
-    status.textContent = 'Kayıtlı şablon okunamadı. Şablonu yeniden seçebilirsiniz.';
-  }).finally(() => { input.disabled = false; });
-  input.onchange = async () => {
-    const file = input.files[0];
-    if (!file) return;
-    input.disabled = true;
-    try {
-      await decodeReferenceBlob(file,type);
-      await referenceStorage('readwrite',store=>store.put(file,reportReferences[type].key));
-      clearPreview();
-      input.value = '';
-      showSavedReference();
-    } catch (error) {
-      status.textContent = error?.name === 'QuotaExceededError'
-        ? 'Cihazda şablon için yeterli depolama alanı yok.'
-        : error?.message || 'Şablon kaydedilemedi.';
-    } finally {
-      input.disabled = false;
-    }
-  };
 }

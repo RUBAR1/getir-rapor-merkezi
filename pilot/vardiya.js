@@ -39,6 +39,9 @@ function prepareShift(rows, now = new Date()) {
   const sourceRows = rows.slice(header + 1).filter(row => row.some(cell => String(cell ?? '').trim()));
   for (const row of sourceRows) {
     const data = columns.map(column => String(row[column] ?? '').trim());
+    if (/^\/couriers\/[^/]+\/logoutCouriersMeetingCriteria$/i.test(data[3])) {
+      data[3] = 'Logout';
+    }
     const status = norm(data[3]);
     if (status === 'login') {
       excluded.login++;

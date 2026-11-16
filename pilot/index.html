@@ -42,7 +42,7 @@ main>.panel,.screen-nav{background:#fff}
 .screen-rider img{display:block;width:100%;height:100%;max-height:230px;min-height:0;object-fit:contain;object-position:bottom;mask-image:linear-gradient(transparent,#000 15%,#000 95%,transparent)}
 @media(max-height:650px){main{gap:6px;padding-top:4px}header{padding:5px 16px}header .logo{width:44px;height:44px}#create{padding:10px}#create h2{margin-bottom:7px}#create label:not(:first-of-type){margin-top:6px}}
 @media(max-height:580px){main[data-screen=create]{grid-template-rows:auto minmax(0,1fr)}.screen-rider{display:none}}
-#create .controls{grid-template-areas:"process process process" "png jpg save"}
+#create .controls{grid-template-areas:"process process process" "png jpg save" "whatsapp whatsapp whatsapp"}
 #create #parse{grid-area:process}
 #create #png{grid-area:png}
 #create #jpg{grid-area:jpg}
@@ -56,12 +56,14 @@ header .logo{border:2.5px solid #ffdc18;background:#210b40;padding:3px;box-shado
   -webkit-mask-composite:source-in;
   mask-composite:intersect;
 }
+#create #whatsapp{grid-area:whatsapp;background:#176842;color:#fff}
+@media(max-height:700px){#create .controls{gap:6px}#create .hint,#status{margin-top:6px}}
 </style></head><body><header><div class="wrap"><div class="brand"><img class="logo" src="./logo.webp" alt="" width="52" height="52"><div><h1>GETİR RAPOR MERKEZİ</h1><p>DAVUTPAŞA GB</p></div></div></div></header><main data-screen="create"><nav class="screen-nav" aria-label="Uygulama bölümleri">
 <button type="button" data-screen="create" aria-pressed="true">Rapor oluştur</button>
 <button type="button" data-screen="preview" aria-pressed="false" disabled>Önizleme</button>
 <button type="button" data-screen="archive-panel" aria-pressed="false">Arşiv</button>
 <button type="button" data-screen="install-panel" aria-pressed="false">Kurulum</button>
-</nav><section class="panel" id="create"><h2>RAPOR OLUŞTUR</h2><label for="type">Rapor türü</label><select id="type"><option value="cdi">CDI — Disiplin Performansı</option><option value="depo">Depo İçi Süre</option><option value="shift">Kurye Vardiya Giriş–Çıkış</option><option value="problem">Kurye Problemli Sipariş</option><option value="star">Kurye Yıldız Puanı</option><option value="picker">Depocu Problemli Sipariş</option><option value="ortak">Sorunsuz Teslimat – Ortak</option></select><label for="file">Excel dosyası (.xlsx)</label><input id="file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><p class="hint">Excel dosyası cihazında işlenir.</p><div class="controls"><button id="parse">Dosyayı işle</button><button id="png" disabled>PNG indir</button><button id="jpg" disabled>JPG indir</button><button id="save" class="secondary" disabled>Arşive kaydet</button></div><p id="status" role="status" aria-live="polite">Rapor türünü ve Excel dosyasını seçin.</p></section><section class="panel hidden" id="preview" hidden><h2>Önizleme</h2><div class="controls"><button type="button" class="secondary" id="previewActions">İndirme ve kayıt</button><button id="detail" class="secondary" hidden disabled>Okunaklı tablo PNG</button></div><div class="grid"><div class="metric"><b id="count">0</b><small>Veri satırı</small></div><div class="metric"><b id="columns">0</b><small>Sütun</small></div><div class="metric"><b id="date">—</b><small>Rapor tarihi</small></div></div><p id="summary" class="hint"></p><div class="scroll"><table id="table"></table></div><p class="notice">Önizleme ilk 50 satırı gösterir. İndirilen görselde tüm rapor satırları yer alır.</p></section><section class="panel" id="archive-panel" hidden><h2>Yerel rapor arşivi</h2><p class="hint">Kaydettiğin raporlar bu iPhone'un tarayıcı depolamasında tutulur. Önemli raporları Dosyalar’a da indirebilirsin.</p><div class="controls"><button id="refresh" class="secondary">Arşivi yenile</button><button id="backup" class="secondary">Arşiv yedeği (JSON)</button><button id="restore" class="secondary">Yedeği geri yükle</button><input type="file" id="restoreFile" accept=".json,application/json" class="hidden"></div><div id="archive"></div></section><section class="panel" id="install-panel" hidden><h2>Ana ekrana ekle</h2><p class="hint">iPhone’da Safari’den açıp Paylaş → Ana Ekrana Ekle’yi seç.</p></section><figure class="screen-rider" id="screenRider" aria-hidden="true"><img src="./rider.webp" alt=""></figure></main><footer>Getir Rapor Merkezi · Davutpaşa GB</footer><script src="./depo.js"></script><script src="./vardiya.js"></script><script src="./problem.js"></script><script src="./star.js"></script><script src="./picker.js"></script><script src="./ortak.js"></script><script>
+</nav><section class="panel" id="create"><h2>RAPOR OLUŞTUR</h2><label for="type">Rapor türü</label><select id="type"><option value="cdi">CDI — Disiplin Performansı</option><option value="depo">Depo İçi Süre</option><option value="shift">Kurye Vardiya Giriş–Çıkış</option><option value="problem">Kurye Problemli Sipariş</option><option value="star">Kurye Yıldız Puanı</option><option value="picker">Depocu Problemli Sipariş</option><option value="ortak">Sorunsuz Teslimat – Ortak</option></select><label for="file">Excel dosyası (.xlsx)</label><input id="file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><p class="hint">Excel dosyası cihazında işlenir.</p><div class="controls"><button id="parse">Dosyayı işle</button><button id="png" disabled>PNG indir</button><button id="jpg" disabled>JPG indir</button><button id="save" class="secondary" disabled>Arşive kaydet</button><button id="whatsapp" type="button" disabled>WhatsApp’ta paylaş</button></div><p id="status" role="status" aria-live="polite">Rapor türünü ve Excel dosyasını seçin.</p></section><section class="panel hidden" id="preview" hidden><h2>Önizleme</h2><div class="controls"><button type="button" class="secondary" id="previewActions">İndirme ve kayıt</button><button id="detail" class="secondary" hidden disabled>Okunaklı tablo PNG</button></div><div class="grid"><div class="metric"><b id="count">0</b><small>Veri satırı</small></div><div class="metric"><b id="columns">0</b><small>Sütun</small></div><div class="metric"><b id="date">—</b><small>Rapor tarihi</small></div></div><p id="summary" class="hint"></p><div class="scroll"><table id="table"></table></div><p class="notice">Önizleme ilk 50 satırı gösterir. İndirilen görselde tüm rapor satırları yer alır.</p></section><section class="panel" id="archive-panel" hidden><h2>Yerel rapor arşivi</h2><p class="hint">Kaydettiğin raporlar bu iPhone'un tarayıcı depolamasında tutulur. Önemli raporları Dosyalar’a da indirebilirsin.</p><div class="controls"><button id="refresh" class="secondary">Arşivi yenile</button><button id="backup" class="secondary">Arşiv yedeği (JSON)</button><button id="restore" class="secondary">Yedeği geri yükle</button><input type="file" id="restoreFile" accept=".json,application/json" class="hidden"></div><div id="archive"></div></section><section class="panel" id="install-panel" hidden><h2>Ana ekrana ekle</h2><p class="hint">iPhone’da Safari’den açıp Paylaş → Ana Ekrana Ekle’yi seç.</p></section><figure class="screen-rider" id="screenRider" aria-hidden="true"><img src="./rider.webp" alt=""></figure></main><footer>Getir Rapor Merkezi · Davutpaşa GB</footer><script src="./depo.js"></script><script src="./vardiya.js"></script><script src="./problem.js"></script><script src="./star.js"></script><script src="./picker.js"></script><script src="./ortak.js"></script><script>
 'use strict';
 const $=id=>document.getElementById(id);let current=null;
 const archiveStatus = document.createElement('p');
@@ -177,9 +179,43 @@ function dbOpen(){return new Promise((res,rej)=>{let r=indexedDB.open('getir-rap
 async function allRecords(){let db=await dbOpen();return new Promise((res,rej)=>{let t=db.transaction('reports','readonly'),r=t.objectStore('reports').getAll();r.onsuccess=()=>{db.close();res(r.result.sort((a,b)=>b.created.localeCompare(a.created)))};r.onerror=()=>rej(r.error)})}
 async function putRecord(rec){let db=await dbOpen();return new Promise((res,rej)=>{let t=db.transaction('reports','readwrite');t.objectStore('reports').put(rec);t.oncomplete=()=>{db.close();res()};t.onerror=()=>rej(t.error)})}
 async function deleteRecord(id){let db=await dbOpen();return new Promise((res,rej)=>{let t=db.transaction('reports','readwrite');t.objectStore('reports').delete(id);t.oncomplete=()=>{db.close();res()};t.onerror=()=>rej(t.error)})}
-async function refresh(){let items=await allRecords(),box=$('archive');box.innerHTML='';if(!items.length){box.textContent='Henüz kayıt yok.';return}for(let r of items){let el=document.createElement('div');el.className='item';let info=document.createElement('div');info.innerHTML=`<b>${esc(names[r.type]||r.type)}</b><small>${esc(r.created)} • ${r.data.length} kayıt • ${esc(r.date)}</small>`;let buttons=document.createElement('div');let open=document.createElement('button');open.className='secondary';open.textContent='Aç';open.onclick=()=>{current=r;preview(r);$('png').disabled=$('jpg').disabled=$('save').disabled=false;showScreen('preview')};let del=document.createElement('button');del.className='danger';del.textContent='Sil';del.onclick=async()=>{if(confirm('Bu rapor arşivden silinsin mi?')){await deleteRecord(r.id);await refresh()}};buttons.append(open,del);el.append(info,buttons);box.append(el)}}
+async function refresh(){let items=await allRecords(),box=$('archive');box.innerHTML='';if(!items.length){box.textContent='Henüz kayıt yok.';return}for(let r of items){let el=document.createElement('div');el.className='item';let info=document.createElement('div');info.innerHTML=`<b>${esc(names[r.type]||r.type)}</b><small>${esc(r.created)} • ${r.data.length} kayıt • ${esc(r.date)}</small>`;let buttons=document.createElement('div');let open=document.createElement('button');open.className='secondary';open.textContent='Aç';open.onclick=()=>{clearWhatsAppShare();current=r;preview(r);void prepareWhatsAppShare(r);$('png').disabled=$('jpg').disabled=$('save').disabled=false;showScreen('preview')};let del=document.createElement('button');del.className='danger';del.textContent='Sil';del.onclick=async()=>{if(confirm('Bu rapor arşivden silinsin mi?')){await deleteRecord(r.id);await refresh()}};buttons.append(open,del);el.append(info,buttons);box.append(el)}}
 async function run(fn){const status = $('archive-panel').hidden ? $('status') : archiveStatus;try{status.textContent='İşleniyor…';await fn();if(status.textContent==='İşleniyor…')status.textContent='İşlem tamamlandı.'}catch(e){console.error(e);status.textContent='Hata: '+e.message}}
+let whatsappFile = null;
+const whatsappButton = $('whatsapp');
+const supportsFileSharing = typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
+
+function clearWhatsAppShare() {
+  whatsappFile = null;
+  whatsappButton.disabled = true;
+}
+
+async function prepareWhatsAppShare(report, canvas) {
+  if (!supportsFileSharing) return;
+  try {
+    const blob = await blobCanvas(canvas ?? await reportCanvas(report), 'image/jpeg');
+    const file = new File([blob], fileName(report, 'jpg'), {type:'image/jpeg'});
+    if (current !== report || !navigator.canShare({files:[file]})) return;
+    whatsappFile = file;
+    whatsappButton.disabled = false;
+  } catch (error) {
+    console.warn('Paylaşım dosyası hazırlanamadı.', error);
+  }
+}
+
+whatsappButton.onclick = async () => {
+  if (!whatsappFile) return;
+  try {
+    await navigator.share({files:[whatsappFile]});
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      $('status').textContent = 'Paylaşım açılmadı. JPG indir düğmesini kullanabilirsin.';
+    }
+  }
+};
+
 function clearPreview() {
+  clearWhatsAppShare();
   current = null;
   previewTab.disabled = true;
   showScreen('create');
@@ -206,11 +242,12 @@ $('parse').onclick = () => run(async () => {
     if (type === 'problem') report.problemVersion = 1;
     report.sourceName = file.name;
     report.inputCount = ['shift','picker'].includes(type) ? report.source : rows.filter(row => row.some(value => String(value ?? '').trim())).length - 1;
-    if (['cdi','depo','shift','problem','star','picker','ortak'].includes(type)) await reportCanvas(report);
+    const canvas = await reportCanvas(report);
     if ($('file').files[0] !== file || $('type').value !== type) return;
     current = report;
     preview(report);
     $('png').disabled = $('jpg').disabled = $('save').disabled = false;
+    void prepareWhatsAppShare(report, canvas);
   } finally {
     $('parse').disabled = false;
   }

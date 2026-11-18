@@ -58,12 +58,30 @@ header .logo{border:2.5px solid #ffdc18;background:#210b40;padding:3px;box-shado
 }
 #create .controls #whatsapp{grid-area:whatsapp;background:#176842;color:#fff}
 @media(max-height:700px){#create .controls{gap:6px}#create .hint,#status{margin-top:6px}}
+
+.report-type.courier{--type-bg:#e7f1ff;--type-ink:#134c91;--type-border:#78a9e5}
+.report-type.depot{--type-bg:#fff3b8;--type-ink:#654600;--type-border:#e4bb32}
+.report-type.shared{--type-bg:#e1f4e8;--type-ink:#14613b;--type-border:#66af86}
+#create #reportTypeButton,#reportTypeDialog .report-type{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:46px;text-align:left;white-space:normal;background:var(--type-bg);color:var(--type-ink);border:1px solid var(--type-border);border-left-width:5px;border-radius:10px;padding:10px 12px;font-size:15px;line-height:1.3;font-weight:700}
+#reportTypeButton:focus-visible,#reportTypeDialog button:focus-visible{outline:3px solid #7041b5;outline-offset:2px}
+#reportTypeDialog{width:calc(100% - 32px);max-width:450px;max-height:calc(100dvh - 32px);padding:16px;border:1px solid #e5daef;border-radius:18px;background:#fff;color:#241b32;font-family:GetirUI,system-ui,sans-serif;box-shadow:0 18px 70px #16032d66}
+#reportTypeDialog::backdrop{background:#1b073d88}
+.report-type-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+#reportTypeDialog h2{margin:0;font-size:20px}
+#closeReportTypes{width:44px;height:44px;padding:0;font-size:28px;background:#f0e9fa;color:#48128b}
+.report-type-options{display:grid;gap:8px}
+.report-check{min-width:18px}
+@media(max-height:650px){#reportTypeDialog .report-type{padding:8px 10px;min-height:44px}.report-type-options{gap:6px}}
 </style></head><body><header><div class="wrap"><div class="brand"><img class="logo" src="./logo.webp" alt="" width="52" height="52"><div><h1>GETİR RAPOR MERKEZİ</h1><p>DAVUTPAŞA GB</p></div></div></div></header><main data-screen="create"><nav class="screen-nav" aria-label="Uygulama bölümleri">
 <button type="button" data-screen="create" aria-pressed="true">Rapor oluştur</button>
 <button type="button" data-screen="preview" aria-pressed="false" disabled>Önizleme</button>
 <button type="button" data-screen="archive-panel" aria-pressed="false">Arşiv</button>
 <button type="button" data-screen="install-panel" aria-pressed="false">Kurulum</button>
-</nav><section class="panel" id="create"><h2>RAPOR OLUŞTUR</h2><label for="type">Rapor türü</label><select id="type"><option value="cdi">CDI — Disiplin Performansı</option><option value="depo">Depo İçi Süre</option><option value="shift">Kurye Vardiya Giriş–Çıkış</option><option value="problem">Kurye Problemli Sipariş</option><option value="star">Kurye Yıldız Puanı</option><option value="picker">Depocu Problemli Sipariş</option><option value="ortak">Sorunsuz Teslimat – Ortak</option></select><label for="file">Excel dosyası (.xlsx)</label><input id="file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><p class="hint">Excel dosyası cihazında işlenir.</p><div class="controls"><button id="parse">Dosyayı işle</button><button id="png" disabled>PNG indir</button><button id="jpg" disabled>JPG indir</button><button id="save" class="secondary" disabled>Arşive kaydet</button><button id="whatsapp" type="button" disabled>WhatsApp’ta paylaş</button></div><p id="status" role="status" aria-live="polite">Rapor türünü ve Excel dosyasını seçin.</p></section><section class="panel hidden" id="preview" hidden><h2>Önizleme</h2><div class="controls"><button type="button" class="secondary" id="previewActions">İndirme ve kayıt</button><button id="detail" class="secondary" hidden disabled>Okunaklı tablo PNG</button></div><div class="grid"><div class="metric"><b id="count">0</b><small>Veri satırı</small></div><div class="metric"><b id="columns">0</b><small>Sütun</small></div><div class="metric"><b id="date">—</b><small>Rapor tarihi</small></div></div><p id="summary" class="hint"></p><div class="scroll"><table id="table"></table></div><p class="notice">Önizleme ilk 50 satırı gösterir. İndirilen görselde tüm rapor satırları yer alır.</p></section><section class="panel" id="archive-panel" hidden><h2>Yerel rapor arşivi</h2><p class="hint">Kaydettiğin raporlar bu iPhone'un tarayıcı depolamasında tutulur. Önemli raporları Dosyalar’a da indirebilirsin.</p><div class="controls"><button id="refresh" class="secondary">Arşivi yenile</button><button id="backup" class="secondary">Arşiv yedeği (JSON)</button><button id="restore" class="secondary">Yedeği geri yükle</button><input type="file" id="restoreFile" accept=".json,application/json" class="hidden"></div><div id="archive"></div></section><section class="panel" id="install-panel" hidden><h2>Ana ekrana ekle</h2><p class="hint">iPhone’da Safari’den açıp Paylaş → Ana Ekrana Ekle’yi seç.</p></section><figure class="screen-rider" id="screenRider" aria-hidden="true"><img src="./rider.webp" alt=""></figure></main><footer>Getir Rapor Merkezi · Davutpaşa GB</footer><script src="./depo.js"></script><script src="./vardiya.js"></script><script src="./problem.js"></script><script src="./star.js"></script><script src="./picker.js"></script><script src="./ortak.js"></script><script>
+</nav><section class="panel" id="create"><h2>RAPOR OLUŞTUR</h2><label id="reportTypeLabel" for="reportTypeButton">Rapor türü</label><select id="type" hidden><option value="star">Kurye Yıldız Puanı</option><option value="problem">Kurye Problemli Sipariş</option><option value="shift">Kurye Vardiya Giriş–Çıkış</option><option value="cdi">CDI – Disiplin Performansı</option><option value="ortak">Sorunsuz Teslimat – Ortak</option><option value="picker">Depocu Problemli Sipariş</option><option value="depo">Depo İçi Süre</option></select>
+<button type="button" id="reportTypeButton" class="report-type courier" aria-haspopup="dialog" aria-controls="reportTypeDialog"><span>Kurye Yıldız Puanı</span><span aria-hidden="true">⌄</span></button>
+<dialog id="reportTypeDialog" aria-labelledby="reportTypeHeading">
+<div class="report-type-heading"><h2 id="reportTypeHeading">Rapor türü</h2><button type="button" id="closeReportTypes" aria-label="Rapor seçimini kapat">×</button></div>
+<div class="report-type-options"><button type="button" class="report-type courier" data-report="star" aria-pressed="true"><span>Kurye Yıldız Puanı</span><span class="report-check" aria-hidden="true">✓</span></button><button type="button" class="report-type courier" data-report="problem" aria-pressed="false"><span>Kurye Problemli Sipariş</span><span class="report-check" aria-hidden="true"></span></button><button type="button" class="report-type courier" data-report="shift" aria-pressed="false"><span>Kurye Vardiya Giriş–Çıkış</span><span class="report-check" aria-hidden="true"></span></button><button type="button" class="report-type courier" data-report="cdi" aria-pressed="false"><span>CDI – Disiplin Performansı</span><span class="report-check" aria-hidden="true"></span></button><button type="button" class="report-type shared" data-report="ortak" aria-pressed="false"><span>Sorunsuz Teslimat – Ortak</span><span class="report-check" aria-hidden="true"></span></button><button type="button" class="report-type depot" data-report="picker" aria-pressed="false"><span>Depocu Problemli Sipariş</span><span class="report-check" aria-hidden="true"></span></button><button type="button" class="report-type depot" data-report="depo" aria-pressed="false"><span>Depo İçi Süre</span><span class="report-check" aria-hidden="true"></span></button></div></dialog><label for="file">Excel dosyası (.xlsx)</label><input id="file" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><p class="hint">Excel dosyası cihazında işlenir.</p><div class="controls"><button id="parse">Dosyayı işle</button><button id="png" disabled>PNG indir</button><button id="jpg" disabled>JPG indir</button><button id="save" class="secondary" disabled>Arşive kaydet</button><button id="whatsapp" type="button" disabled>WhatsApp’ta paylaş</button></div><p id="status" role="status" aria-live="polite">Rapor türünü ve Excel dosyasını seçin.</p></section><section class="panel hidden" id="preview" hidden><h2>Önizleme</h2><div class="controls"><button type="button" class="secondary" id="previewActions">İndirme ve kayıt</button><button id="detail" class="secondary" hidden disabled>Okunaklı tablo PNG</button></div><div class="grid"><div class="metric"><b id="count">0</b><small>Veri satırı</small></div><div class="metric"><b id="columns">0</b><small>Sütun</small></div><div class="metric"><b id="date">—</b><small>Rapor tarihi</small></div></div><p id="summary" class="hint"></p><div class="scroll"><table id="table"></table></div><p class="notice">Önizleme ilk 50 satırı gösterir. İndirilen görselde tüm rapor satırları yer alır.</p></section><section class="panel" id="archive-panel" hidden><h2>Yerel rapor arşivi</h2><p class="hint">Kaydettiğin raporlar bu iPhone'un tarayıcı depolamasında tutulur. Önemli raporları Dosyalar’a da indirebilirsin.</p><div class="controls"><button id="refresh" class="secondary">Arşivi yenile</button><button id="backup" class="secondary">Arşiv yedeği (JSON)</button><button id="restore" class="secondary">Yedeği geri yükle</button><input type="file" id="restoreFile" accept=".json,application/json" class="hidden"></div><div id="archive"></div></section><section class="panel" id="install-panel" hidden><h2>Ana ekrana ekle</h2><p class="hint">iPhone’da Safari’den açıp Paylaş → Ana Ekrana Ekle’yi seç.</p></section><figure class="screen-rider" id="screenRider" aria-hidden="true"><img src="./rider.webp" alt=""></figure></main><footer>Getir Rapor Merkezi · Davutpaşa GB</footer><script src="./depo.js"></script><script src="./vardiya.js"></script><script src="./problem.js"></script><script src="./star.js"></script><script src="./picker.js"></script><script src="./ortak.js"></script><script>
 'use strict';
 const $=id=>document.getElementById(id);let current=null;
 const archiveStatus = document.createElement('p');
@@ -253,6 +271,39 @@ function clearPreview() {
 }
 $('file').onchange = clearPreview;
 $('type').onchange = clearPreview;
+
+const reportTypeButton = $('reportTypeButton');
+const reportTypeDialog = $('reportTypeDialog');
+const reportOptions = [...reportTypeDialog.querySelectorAll('[data-report]')];
+function syncReportType() {
+  const chosen = reportOptions.find(button => button.dataset.report === $('type').value);
+  reportTypeButton.className = chosen.className;
+  reportTypeButton.firstElementChild.textContent = chosen.firstElementChild.textContent;
+  for (const button of reportOptions) {
+    const selected = button === chosen;
+    button.setAttribute('aria-pressed',String(selected));
+    button.querySelector('.report-check').textContent = selected ? '✓' : '';
+  }
+}
+reportTypeButton.onclick = () => {
+  syncReportType();
+  reportTypeDialog.showModal();
+  reportOptions.find(button => button.dataset.report === $('type').value).focus();
+};
+$('closeReportTypes').onclick = () => reportTypeDialog.close();
+reportTypeDialog.addEventListener('close', () => reportTypeButton.focus());
+for (const button of reportOptions) {
+  button.onclick = () => {
+    const changed = $('type').value !== button.dataset.report;
+    $('type').value = button.dataset.report;
+    if (changed) $('type').dispatchEvent(new Event('change', {bubbles:true}));
+    syncReportType();
+    reportTypeDialog.close();
+  };
+}
+$('type').addEventListener('change',syncReportType);
+syncReportType();
+
 $('parse').onclick = () => run(async () => {
   clearPreview();
   const file = $('file').files[0];
